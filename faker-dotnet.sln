@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32002.261
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5B1D842D-E6DE-4EBB-8150-6F01DED7CB77}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{042E021B-8519-470F-9DD3-21E278B26C62}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Faker.Core", "src\Faker.Core\Faker.Core.csproj", "{3B4C5549-0FA3-495D-AFA0-9A6B7C907B8D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Faker.Abstractions", "src\Faker.Abstractions\Faker.Abstractions.csproj", "{CE75C62B-6B72-4DC2-8D9C-05B239F723A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faker.Tests", "test\Faker.Tests\Faker.Tests.csproj", "{6F4245A7-26DD-4160-84E7-AAA99AB52098}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{867AD986-A57F-49B5-897D-EED83097B2F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faker.Provider.CHS", "src\providers\Faker.Provider.CHS\Faker.Provider.CHS.csproj", "{3487D5D9-D76A-4811-8186-20AC588F1F55}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3B4C5549-0FA3-495D-AFA0-9A6B7C907B8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B4C5549-0FA3-495D-AFA0-9A6B7C907B8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B4C5549-0FA3-495D-AFA0-9A6B7C907B8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B4C5549-0FA3-495D-AFA0-9A6B7C907B8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE75C62B-6B72-4DC2-8D9C-05B239F723A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE75C62B-6B72-4DC2-8D9C-05B239F723A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE75C62B-6B72-4DC2-8D9C-05B239F723A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE75C62B-6B72-4DC2-8D9C-05B239F723A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F4245A7-26DD-4160-84E7-AAA99AB52098}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F4245A7-26DD-4160-84E7-AAA99AB52098}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F4245A7-26DD-4160-84E7-AAA99AB52098}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F4245A7-26DD-4160-84E7-AAA99AB52098}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3487D5D9-D76A-4811-8186-20AC588F1F55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3487D5D9-D76A-4811-8186-20AC588F1F55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3487D5D9-D76A-4811-8186-20AC588F1F55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3487D5D9-D76A-4811-8186-20AC588F1F55}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3B4C5549-0FA3-495D-AFA0-9A6B7C907B8D} = {5B1D842D-E6DE-4EBB-8150-6F01DED7CB77}
+		{CE75C62B-6B72-4DC2-8D9C-05B239F723A4} = {5B1D842D-E6DE-4EBB-8150-6F01DED7CB77}
+		{6F4245A7-26DD-4160-84E7-AAA99AB52098} = {042E021B-8519-470F-9DD3-21E278B26C62}
+		{867AD986-A57F-49B5-897D-EED83097B2F1} = {5B1D842D-E6DE-4EBB-8150-6F01DED7CB77}
+		{3487D5D9-D76A-4811-8186-20AC588F1F55} = {867AD986-A57F-49B5-897D-EED83097B2F1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {26BD4D46-3C22-4AFF-B172-2CDFC50935FB}
+	EndGlobalSection
+EndGlobal
