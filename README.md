@@ -2,7 +2,7 @@
 <div align="center">
 <h2>A set of Faker based on dotnet.</h2>
 </div>
-faker-dotnet is heavily inspired by [Python Faker](https://github.com/joke2k/faker "Python Faker")
+faker-dotnet is heavily inspired by <a href="https://github.com/joke2k/faker">Python Faker<a/>
 
 ---
 
