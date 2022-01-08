@@ -6,7 +6,6 @@
         {
 
         }
-
         public override IPersonProvider CreatePerson()
         {
             return new PersonProvider(this.Generator, this.Options);

@@ -5,7 +5,7 @@ namespace Faker.Provider.CHS
 {
     public class PersonProvider : BasePersonProvider
     {
-        private static readonly SortedList<string, double> _lastNames = new SortedList<string, double>
+        public static readonly SortedList<string, double> _lastNames = new SortedList<string, double>
         {
             {"王", 7.170},
             {"李", 7.000},

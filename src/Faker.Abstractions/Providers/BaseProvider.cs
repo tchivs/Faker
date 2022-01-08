@@ -33,44 +33,73 @@ namespace Faker
     }
     public abstract class BaseProvider<TResult> : BaseProvider, IProvider<TResult>
     {
+        /// <summary>
+        /// 包含权重的随机选择器
+        /// </summary>
+        protected Func<SortedList<TResult, double>, int, IEnumerable<TResult>> Selecter { get; }
+        /// <summary>
+        /// 随机列表选择器
+        /// </summary>
+        protected Func<IList<TResult>, int, IEnumerable<TResult>> Choices { get; }
 
-
-        protected TResult RandomElement(IReadOnlyCollection<TResult> elements)
+        /// <summary>
+        /// 权重选择器
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        protected virtual IEnumerable<TResult> WeightingSelecter(SortedList<TResult, double> elements, int length)
         {
-            return this.RandomElements(elements, 1).First();
+            foreach (var idx in this.Generator.GetRandomIndeiesByWidths(elements.Values))
+            {
+                yield return elements.Keys[idx];
+            }
         }
-        protected IEnumerable<TResult> RandomElements(IReadOnlyCollection<TResult> elements, int? length = null, bool? useWeighting = false, bool unique = false)
+        /// <summary>
+        /// 简单选择器
+        /// </summary>
+        /// <param name="elements"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        protected IEnumerable<TResult> SampleSelecter(SortedList<TResult, double> elements, int length)
         {
-            useWeighting ??= this.Options.UseWeighting;
-            var len = length ??= this.Generator.Random.Next(1, elements.Count);
-            Func<IReadOnlyCollection<TResult>, int, IEnumerable<TResult>> fn = null;
-            if (unique)
-            {
-                fn = ChoicesDistributionUnique;
-            }
-            else
-            {
-                fn = ChoicesDistribution;
-            }
-            if (unique && length > elements.Count)
+            if (this.Options.Unique && length > elements.Count)
             {
                 throw new Exception("Sample length cannot be longer than the number of unique elements to pick from.");
             }
-            return fn.Invoke(elements, len);
+            return this.Choices.Invoke(elements.Keys, length);
+        }
+        private TResult ChoicesOne(IList<TResult> elements)
+        {
+            return elements[this.Generator.GetRandomIndex(elements.Count)];
         }
 
-        protected virtual IEnumerable<TResult> ChoicesDistributionUnique(IReadOnlyCollection<TResult> elements,
+        private TResult ChoicesOneByWidth(SortedList<TResult, double> elements)
+        {
+            var w = this.Generator.GetWeightIndex(elements.Values);
+            return elements.Keys[this.Generator.GetRandomIndexByWidths(w)];
+        }
+
+        protected TResult RandomElement(IList<TResult> elements)
+        {
+            return ChoicesOne(elements);
+        }
+
+        protected virtual IEnumerable<TResult> ChoicesDistributionUnique(IList<TResult> elements,
             int length)
         {
-            return this.Generator.Sample(elements, length);
+            if (length == 1)
+            {
+                return ChoicesDistribution(elements, length);
+            }
+            return this.Generator.Unique(elements, length);
         }
-
-
-        protected virtual IEnumerable<TResult> ChoicesDistribution(IReadOnlyCollection<TResult> elements, int length)
+        protected virtual IEnumerable<TResult> ChoicesDistribution(IList<TResult> elements, int length)
         {
             return this.Generator.Sample(elements, length);
         }
-
         public TResult this[string name] => GetOrCreateIndexFunction(name).Invoke();
         readonly Dictionary<string, Func<TResult>> _lambdaCache = new Dictionary<string, Func<TResult>>();
         protected Func<TResult> GetOrCreateIndexFunction(string methodName)
@@ -93,9 +122,26 @@ namespace Faker
             return lambda;
 
         }
-
         protected BaseProvider(CultureInfo cultureInfo, IGenerator generator, ProviderOptions options) : base(cultureInfo, generator, options)
         {
+            if (this.Options.UseWeighting)
+            {
+                Selecter = WeightingSelecter;
+            }
+            else
+            {
+                Selecter = SampleSelecter;
+            }
+            if (this.Options.Unique)
+            {
+                Choices = this.ChoicesDistributionUnique;
+            }
+            else
+            {
+                Choices = this.ChoicesDistribution;
+            }
         }
+
+
     }
 }

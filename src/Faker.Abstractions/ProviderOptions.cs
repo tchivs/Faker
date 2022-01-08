@@ -9,6 +9,7 @@ namespace Faker
     {
         public bool UseWeighting { get; set; }
         public PersonOption Person { get; set; } = new PersonOption();
+        public bool Unique { get;   set; }
     }
 
     public class PersonOption

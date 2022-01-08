@@ -22,14 +22,13 @@ namespace Faker.Core
             Generator = generator;
             this.Options = options;
             this.ProviderFactory = CreateProviderFactory(providerFactoryType);
-            Person = ProviderFactory.CreatePerson();
         }
         private IProviderFactory CreateProviderFactory(Type providerFactoryType)
         {
-            var provider = providerFactoryType.CreateInstance<ProviderFactoryBase>(this.CultureInfo,this.Generator,this.Options.Provider);
+            var provider = providerFactoryType.CreateInstance<ProviderFactoryBase>(this.CultureInfo, this.Generator, this.Options.Provider);
             return provider;
         }
-        public IPersonProvider Person { get; }
+        public IPersonProvider Person { get => ProviderFactory.CreatePerson(); }
 
         public TProvider CreateProvider<TProvider>() where TProvider : BaseProvider
         {

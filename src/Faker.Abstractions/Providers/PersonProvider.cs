@@ -12,11 +12,8 @@ namespace Faker
         protected virtual string Formats => $"{LastName()}{FirstName()}";
         protected Func<string> romanizedFormats;
         protected virtual string RomanizedFormats => romanizedFormats();
-
-        IReadOnlyList<string> _firstNames;
-        private string[] _lastNamesKeys;
-        private string[] LastNamesKeys => _lastNamesKeys ??= LastNames.Keys.ToArray();
-        protected IReadOnlyList<string> FirstNames => _firstNames ??= FirstNamesMale.Concat(FirstNamesFeMale).ToArray();
+        IList<string> _firstNames;
+        protected IList<string> FirstNames => _firstNames ??= FirstNamesMale.Concat(FirstNamesFeMale).ToArray();
         protected abstract SortedList<string, double> LastNames { get; }
         protected abstract string[] FirstNamesMale { get; }
         protected abstract string[] FirstNamesFeMale { get; }
@@ -24,7 +21,6 @@ namespace Faker
         protected abstract string[] LastRomanizedNames { get; }
         public override void Dispose()
         {
-            _lastNamesKeys = null;
             _firstNames = null;
         }
 
@@ -40,7 +36,7 @@ namespace Faker
 
         public virtual string LastName()
         {
-            return this.RandomElement(LastNamesKeys);
+            return this.Selecter(LastNames,1).First();
         }
         public virtual string NameMale()
         {
@@ -65,7 +61,7 @@ namespace Faker
         }
 
 
-        protected BasePersonProvider(CultureInfo cultureInfo,IGenerator generator, ProviderOptions options) : base(cultureInfo, generator, options)
+        protected BasePersonProvider(CultureInfo cultureInfo, IGenerator generator, ProviderOptions options) : base(cultureInfo, generator, options)
         {
             this.romanizedFormats = () =>
              this.Options.Person.RomanizedWithSpace
