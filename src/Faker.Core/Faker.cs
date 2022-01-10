@@ -1,43 +1,34 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
-
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace Faker.Core
 {
     internal class Faker : IFaker
     {
-        private readonly ReadOnlyCollection<Type> _providerTypes;
-        protected CultureInfo CultureInfo { get; }
-        protected IGenerator Generator { get; }
-        protected FakerOptions Options { get; }
         protected IProviderFactory ProviderFactory { get; }
-        public Faker(ReadOnlyCollection<Type> providerTypes, Type providerFactoryType, CultureInfo cultureInfo, IGenerator generator, FakerOptions options)
+        public Faker(IProviderFactory factory)
         {
-            _providerTypes = providerTypes;
-            CultureInfo = cultureInfo;
-            Generator = generator;
-            this.Options = options;
-            this.ProviderFactory = CreateProviderFactory(providerFactoryType);
+            this.ProviderFactory = factory;
         }
-        private IProviderFactory CreateProviderFactory(Type providerFactoryType)
+        IPersonProvider _person;
+        public IPersonProvider Person { get => _person ??= CreateProvider<IPersonProvider>(); }
+        public TProvider CreateProvider<TProvider>() where TProvider : IProvider
         {
-            var provider = providerFactoryType.CreateInstance<ProviderFactoryBase>(this.CultureInfo, this.Generator, this.Options.Provider);
-            return provider;
+            return ProviderFactory.CreateProvider<TProvider>();
         }
-        public IPersonProvider Person { get => ProviderFactory.CreatePerson(); }
-
-        public TProvider CreateProvider<TProvider>() where TProvider : BaseProvider
+        public void Dispose()
         {
-            var type = typeof(TProvider);
-            if (this._providerTypes.Any(x => x.FullName == type.FullName))
-            {
-                return ProviderFactory.CreateProvider<TProvider>();
-            }
-            throw new NullReferenceException($"{type.FullName} not found,please register by FakerBuilder.AddProvider({type.Name})");
+            Console.WriteLine($"{nameof(Dispose)} Faker");
+            _person.Dispose();
+            _person = null;
+            ProviderFactory.Dispose();
         }
     }
 

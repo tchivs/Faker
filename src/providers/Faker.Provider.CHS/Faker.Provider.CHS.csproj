@@ -4,6 +4,8 @@
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
+   
+
   <ItemGroup>
     <ProjectReference Include="..\..\Faker.Abstractions\Faker.Abstractions.csproj" />
   </ItemGroup>

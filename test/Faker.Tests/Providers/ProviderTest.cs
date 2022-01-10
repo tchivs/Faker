@@ -20,10 +20,12 @@ namespace Faker.Tests.Providers
         [TestMethod]
         //[DataRow("en-US", 100)]
         [DataRow("zh-CN", 100)]
+        [DataRow("zh-CN", 100,true)]
         [DataRow("zh-CN", 1000000)]
-        public void TestGetName(string name, int count)
+        [DataRow("zh-CN", 1000000,true)]
+        public void TestGetName(string name, int count, bool useWeighting = false)
         {
-            var faker = GetFaker(name).Build();
+            using var faker = GetFaker(name).Configure(opt => opt.Provider.UseWeighting = useWeighting).Build();
             Assert.IsNotNull(faker.Person);
             var n = faker.Person["Name"];
             Console.WriteLine(n);
@@ -32,6 +34,7 @@ namespace Faker.Tests.Providers
                 faker.Person.Name();
             }
         }
+
         [TestMethod]
         [DataRow("zh-CN", 100)]
         [DataRow("zh-CN", 1000000)]

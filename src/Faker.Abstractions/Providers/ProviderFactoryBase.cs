@@ -1,26 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace Faker
 {
-    public abstract class ProviderFactoryBase : IProviderFactory
+    public abstract   class ProviderFactoryBase : IProviderFactory
     {
-        protected readonly CultureInfo CultureInfo;
-        protected readonly IGenerator Generator;
-        protected readonly ProviderOptions Options;
-        public abstract IPersonProvider CreatePerson();
-        public TProvider CreateProvider<TProvider>() where TProvider : BaseProvider
+        private readonly IServiceProvider serviceProvider;
+        public IServiceScope servicesScope { get; private set; }
+        public TProvider CreateProvider<TProvider>() where TProvider : IProvider
         {
-            var type = typeof(TProvider);
-            return type.CreateInstance<TProvider>(CultureInfo, Generator, Options);
+            servicesScope ??= this.serviceProvider.CreateScope();
+            return servicesScope.ServiceProvider.GetRequiredService<TProvider>();
         }
-        protected ProviderFactoryBase(CultureInfo cultureInfo, IGenerator generator, ProviderOptions options)
+        public void Dispose()
         {
-            CultureInfo = cultureInfo;
-            Generator = generator;
-            Options = options;
+            servicesScope.Dispose();
+        }
+        protected ProviderFactoryBase(IServiceProvider serviceProvider)
+        {
+            this.serviceProvider = serviceProvider;
         }
     }
 }

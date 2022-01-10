@@ -31,20 +31,20 @@ namespace Faker
 
         public virtual string FirstName()
         {
-            return this.RandomElement(FirstNames);
+            return this.ChoicesOneSample(FirstNames);
         }
 
         public virtual string LastName()
         {
-            return this.Selecter(LastNames,1).First();
+            return this.ChoicesOneFunc(LastNames);
         }
         public virtual string NameMale()
         {
-            return $"{LastName()}{this.RandomElement(FirstNamesMale)}";
+            return $"{LastName()}{this.ChoicesOneSample(FirstNamesMale)}";
         }
         public string NameFemale()
         {
-            return $"{LastName()}{this.RandomElement(FirstNamesFeMale)}";
+            return $"{LastName()}{this.ChoicesOneSample(FirstNamesFeMale)}";
         }
         public string RomanizedName()
         {
@@ -53,11 +53,11 @@ namespace Faker
 
         public string FirstRomanizedName()
         {
-            return this.RandomElement(FirstRomanizedNames);
+            return this.ChoicesOneSample(FirstRomanizedNames);
         }
         public string LastRomanizedName()
         {
-            return this.RandomElement(LastRomanizedNames);
+            return this.ChoicesOneSample(LastRomanizedNames);
         }
 
 

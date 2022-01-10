@@ -41,7 +41,14 @@ namespace Faker
         /// 随机列表选择器
         /// </summary>
         protected Func<IList<TResult>, int, IEnumerable<TResult>> Choices { get; }
-
+        /// <summary>
+        /// 随机单个选择器
+        /// </summary>
+        protected Func<SortedList<TResult, double>, TResult> ChoicesOneFunc { get; }
+        /// <summary>
+        /// weight cache
+        /// </summary>
+        protected Dictionary<int, (double, int)[]> Weights { get; set; } = new Dictionary<int, (double, int)[]>();
         /// <summary>
         /// 权重选择器
         /// </summary>
@@ -63,7 +70,7 @@ namespace Faker
         /// <param name="length"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        protected IEnumerable<TResult> SampleSelecter(SortedList<TResult, double> elements, int length)
+        protected IEnumerable<TResult> SelecterSample(SortedList<TResult, double> elements, int length)
         {
             if (this.Options.Unique && length > elements.Count)
             {
@@ -71,22 +78,20 @@ namespace Faker
             }
             return this.Choices.Invoke(elements.Keys, length);
         }
-        private TResult ChoicesOne(IList<TResult> elements)
+        protected TResult ChoicesOneSample(IList<TResult> elements)
         {
             return elements[this.Generator.GetRandomIndex(elements.Count)];
         }
-
-        private TResult ChoicesOneByWidth(SortedList<TResult, double> elements)
+        protected TResult ChoicesOneByWeight(SortedList<TResult, double> elements)
         {
-            var w = this.Generator.GetWeightIndex(elements.Values);
+            var key = elements.GetHashCode();
+            if (!Weights.TryGetValue(key, out var w))
+            {
+                w = this.Generator.GetWeightIndex(elements.Values);
+                Weights.Add(key, w);
+            }
             return elements.Keys[this.Generator.GetRandomIndexByWidths(w)];
         }
-
-        protected TResult RandomElement(IList<TResult> elements)
-        {
-            return ChoicesOne(elements);
-        }
-
         protected virtual IEnumerable<TResult> ChoicesDistributionUnique(IList<TResult> elements,
             int length)
         {
@@ -122,15 +127,25 @@ namespace Faker
             return lambda;
 
         }
+        public override void Dispose()
+        {
+            this._lambdaCache .Clear();
+            Weights.Clear();
+        }
         protected BaseProvider(CultureInfo cultureInfo, IGenerator generator, ProviderOptions options) : base(cultureInfo, generator, options)
         {
             if (this.Options.UseWeighting)
             {
                 Selecter = WeightingSelecter;
+                ChoicesOneFunc = ChoicesOneByWeight;
             }
             else
             {
-                Selecter = SampleSelecter;
+                Selecter = SelecterSample;
+                ChoicesOneFunc = (e) =>
+                {
+                    return this.ChoicesOneSample(e.Keys);
+                };
             }
             if (this.Options.Unique)
             {
@@ -141,7 +156,5 @@ namespace Faker
                 Choices = this.ChoicesDistribution;
             }
         }
-
-
     }
 }

@@ -1,8 +1,9 @@
-﻿namespace Faker
+﻿using System;
+namespace Faker
 {
-    public interface IProviderFactory
+    public interface IProviderFactory:IDisposable
     {
-        IPersonProvider CreatePerson();
-        TProvider CreateProvider<TProvider>() where TProvider : BaseProvider;
+        
+        TProvider CreateProvider<TProvider>() where TProvider : IProvider;
     }
 }
