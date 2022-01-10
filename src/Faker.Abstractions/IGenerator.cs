@@ -36,8 +36,9 @@ namespace Faker
         /// <summary>
         /// 获取随机索引
         /// </summary>
-        /// <param name="maxIndex">最大索引值</param>
+        /// <param name="max">最大索引值</param>
         /// <returns></returns>
-        int GetRandomIndex(int maxIndex);
+        int GetRandomIndex(int max);
+       
     }
 }

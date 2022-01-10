@@ -31,6 +31,7 @@ namespace Faker.Core
             this.services.AddTransient(typeof(IObjectAccessor<>), typeof(ObjectAccessor<>));
             //this.services.AddSingleton<IObjectAccessor<IServiceProvider>, ObjectAccessor<IServiceProvider>>();
             this.services.AddSingleton(p => p.GetRequiredService<IObjectAccessor<IServiceProvider>>().Value);
+            this.services.TryAddScoped<IInternetProvider, InternetProvider>();
         }
         public FakerBuilder UseCultureInfo(CultureInfo cultureInfo)
         {
@@ -81,7 +82,7 @@ namespace Faker.Core
                 var interfaces = provider.GetInterfaces();
                 services.AddScoped(interfaces.Last(), provider);
             }
- 
+
             services.AddSingleton(this._cultureInfo);
             services.AddSingleton(_options);
             services.AddSingleton(p => p.GetRequiredService<FakerOptions>().Provider);

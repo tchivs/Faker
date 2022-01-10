@@ -19,15 +19,25 @@ namespace Faker.Core
         }
         IPersonProvider _person;
         public IPersonProvider Person { get => _person ??= CreateProvider<IPersonProvider>(); }
+        IInternetProvider _internet;
+        public IInternetProvider Internet => _internet ??= CreateProvider<IInternetProvider>();
+
         public TProvider CreateProvider<TProvider>() where TProvider : IProvider
         {
             return ProviderFactory.CreateProvider<TProvider>();
         }
         public void Dispose()
         {
-            Console.WriteLine($"{nameof(Dispose)} Faker");
-            _person.Dispose();
-            _person = null;
+            if (_person!=null)
+            {
+                _person.Dispose();
+                _person = null;
+            }
+            if (_internet != null)
+            {
+                _internet.Dispose();
+                _internet = null;
+            }
             ProviderFactory.Dispose();
         }
     }

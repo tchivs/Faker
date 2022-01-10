@@ -7,7 +7,7 @@ namespace Faker
     {
 
         IPersonProvider Person { get; }
-
+        IInternetProvider Internet { get; }
         /// <summary>
         /// 创建一个自定义的Provider
         /// </summary>

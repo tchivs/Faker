@@ -21,13 +21,13 @@ namespace Faker
         protected CultureInfo CultureInfo { get; }
         protected IGenerator Generator { get; }
 
-        protected ProviderOptions Options { get; }
+        protected ProviderOptions ProviderOptions { get; }
 
         protected BaseProvider(CultureInfo cultureInfo, IGenerator generator, ProviderOptions options)
         {
             CultureInfo = cultureInfo;
             Generator = generator;
-            this.Options = options;
+            this.ProviderOptions = options;
         }
         public abstract void Dispose();
     }
@@ -72,7 +72,7 @@ namespace Faker
         /// <exception cref="NotImplementedException"></exception>
         protected IEnumerable<TResult> SelecterSample(SortedList<TResult, double> elements, int length)
         {
-            if (this.Options.Unique && length > elements.Count)
+            if (this.ProviderOptions.Unique && length > elements.Count)
             {
                 throw new Exception("Sample length cannot be longer than the number of unique elements to pick from.");
             }
@@ -129,12 +129,12 @@ namespace Faker
         }
         public override void Dispose()
         {
-            this._lambdaCache .Clear();
+            this._lambdaCache.Clear();
             Weights.Clear();
         }
         protected BaseProvider(CultureInfo cultureInfo, IGenerator generator, ProviderOptions options) : base(cultureInfo, generator, options)
         {
-            if (this.Options.UseWeighting)
+            if (this.ProviderOptions.UseWeighting)
             {
                 Selecter = WeightingSelecter;
                 ChoicesOneFunc = ChoicesOneByWeight;
@@ -147,7 +147,7 @@ namespace Faker
                     return this.ChoicesOneSample(e.Keys);
                 };
             }
-            if (this.Options.Unique)
+            if (this.ProviderOptions.Unique)
             {
                 Choices = this.ChoicesDistributionUnique;
             }
@@ -156,5 +156,7 @@ namespace Faker
                 Choices = this.ChoicesDistribution;
             }
         }
+        protected TResult this[IList<TResult> elements] { get => this.ChoicesOneSample(elements); }
+        protected TResult this[SortedList<TResult, double> elements] { get => this.ChoicesOneFunc(elements); }
     }
 }

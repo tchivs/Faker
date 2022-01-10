@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Faker.Tests.Providers
 {
     [TestClass]
-    public class PersonProviderTest
+    public abstract class ProviderTest
     {
         public FakerBuilder GetFaker(string name)
         {
@@ -17,12 +17,45 @@ namespace Faker.Tests.Providers
                 .UseCultureInfo(name);
 
         }
+    }
+    [TestClass]
+    public class InternetProviderTest : ProviderTest
+    {
+        [TestMethod]
+        [DataRow("zh-CN", 100)]
+        [DataRow("zh-CN", 1000000)]
+        public void TestPortNumber(string name, int count)
+        {
+            using var faker = GetFaker(name).Build();
+            for (int i = 0; i < count; i++)
+            {
+                var port = faker.Internet.PortNumber();
+                Assert.IsTrue(port < 65535);
+            }
+        }
+
+        [TestMethod]
+        [DataRow("zh-CN", 100)]
+        public void TestMacAddress(string name, int count)
+        {
+            using var faker = GetFaker(name)
+                .Configure(opt => opt.Provider.Internet.MacAddress.Separator = "-").Build();
+            for (int i = 0; i < count; i++)
+            {
+                var mac = faker.Internet.MacAddress();
+                Console.WriteLine(mac);
+            }
+        }
+    }
+    [TestClass]
+    public class PersonProviderTest : ProviderTest
+    {
         [TestMethod]
         //[DataRow("en-US", 100)]
         [DataRow("zh-CN", 100)]
-        [DataRow("zh-CN", 100,true)]
+        [DataRow("zh-CN", 100, true)]
         [DataRow("zh-CN", 1000000)]
-        [DataRow("zh-CN", 1000000,true)]
+        [DataRow("zh-CN", 1000000, true)]
         public void TestGetName(string name, int count, bool useWeighting = false)
         {
             using var faker = GetFaker(name).Configure(opt => opt.Provider.UseWeighting = useWeighting).Build();

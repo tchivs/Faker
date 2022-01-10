@@ -23,12 +23,10 @@ namespace Faker
         {
             _firstNames = null;
         }
-
         public virtual string Name()
         {
             return Formats;
         }
-
         public virtual string FirstName()
         {
             return this.ChoicesOneSample(FirstNames);
@@ -36,35 +34,32 @@ namespace Faker
 
         public virtual string LastName()
         {
-            return this.ChoicesOneFunc(LastNames);
+            return this[LastNames];
         }
         public virtual string NameMale()
         {
-            return $"{LastName()}{this.ChoicesOneSample(FirstNamesMale)}";
+            return $"{LastName()}{this[FirstNamesMale]}";
         }
         public string NameFemale()
         {
-            return $"{LastName()}{this.ChoicesOneSample(FirstNamesFeMale)}";
+            return $"{LastName()}{this[FirstNamesFeMale]}";
         }
         public string RomanizedName()
         {
             return this.RomanizedFormats;
         }
-
         public string FirstRomanizedName()
         {
-            return this.ChoicesOneSample(FirstRomanizedNames);
+            return this[FirstRomanizedNames];
         }
         public string LastRomanizedName()
         {
-            return this.ChoicesOneSample(LastRomanizedNames);
+            return this[LastRomanizedNames];
         }
-
-
         protected BasePersonProvider(CultureInfo cultureInfo, IGenerator generator, ProviderOptions options) : base(cultureInfo, generator, options)
         {
             this.romanizedFormats = () =>
-             this.Options.Person.RomanizedWithSpace
+             this.ProviderOptions.Person.RomanizedWithSpace
                  ? $"{FirstRomanizedName()} {LastRomanizedName()}"
                  : $"{FirstRomanizedName()}{LastRomanizedName()}";
         }
